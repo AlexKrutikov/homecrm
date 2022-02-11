@@ -19,7 +19,6 @@ export default {
         const uid = await dispatch('getUid')
 
         var infoRef = ref(database, `/users/${uid}/info`);
-        console.log(infoRef);
         onValue(infoRef, (info) => {
           const data = info.val();
           commit('setInfo', data)
