@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, set, onValue, push } from "firebase/database";
+import { getDatabase, ref, set, get, onValue, push, update, child } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBWe1ZN01AK5XL8349z-LuldEO9hQmAF8Y",
@@ -17,6 +17,58 @@ const database = getDatabase();
 
 export default {
   actions: {
+    async fetchCategories({ commit, dispatch }) {
+      try {
+        const cats = []
+        const uid = await dispatch('getUid')
+        const categoryRef = ref(database, `/users/${uid}/categories`)
+        onValue(categoryRef, (snapshot) => {
+          const categoriesData = snapshot.val() || {}
+
+          Object.keys(categoriesData).forEach(key => {
+            cats.push({
+              id: key,
+              title: categoriesData[key].title,
+              limit: categoriesData[key].limit
+            })
+          })
+
+        }, {
+          onlyOnce: true
+        });
+        return cats
+      } catch (e) {
+        commit('setError', e)
+        throw e
+      }
+    },
+    async updateCategory({ commit, dispatch }, { title, limit, id }) {
+      try {
+        const uid = await dispatch('getUid')
+
+        const postData = {
+          title: title,
+          limit: limit
+        }
+        // const updates = {};
+        // updates[`/users/${uid}/categories/${id}/`] = postData;
+        // return update(ref(database), updates)
+
+        set(ref(database, `/users/${uid}/categories/${id}/`), postData)
+          .then(() => {
+            // console.log("data was updated");
+          })
+          .catch((error) => {
+            // console.log("no data updated");
+            commit('setError', error)
+            throw error
+          });
+
+      } catch (e) {
+        commit('setError', e)
+        throw e
+      }
+    },
     async createCategory({ commit, dispatch }, { title, limit }) {
       try {
         const uid = await dispatch('getUid')
