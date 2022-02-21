@@ -19,23 +19,30 @@ export default {
   actions: {
     async fetchCategories({ commit, dispatch }) {
       try {
+
         const cats = []
         const uid = await dispatch('getUid')
-        const categoryRef = ref(database, `/users/${uid}/categories`)
-        onValue(categoryRef, (snapshot) => {
-          const categoriesData = snapshot.val() || {}
+        var categoriesData = {}
+        const dbRef = ref(database);
+        await get(child(dbRef, `/users/${uid}/categories`)).then((snapshot) => {
 
-          Object.keys(categoriesData).forEach(key => {
-            cats.push({
-              id: key,
-              title: categoriesData[key].title,
-              limit: categoriesData[key].limit
+          if (snapshot.exists()) {
+            const categoriesData = snapshot.val() || {}
+
+            Object.keys(categoriesData).forEach(key => {
+              cats.push({
+                id: key,
+                title: categoriesData[key].title,
+                limit: categoriesData[key].limit
+              })
             })
-          })
 
-        }, {
-          onlyOnce: true
+          }
+        }).catch((error) => {
+          commit('setError', error)
+          throw error
         });
+
         return cats
       } catch (e) {
         commit('setError', e)
@@ -50,11 +57,8 @@ export default {
           title: title,
           limit: limit
         }
-        // const updates = {};
-        // updates[`/users/${uid}/categories/${id}/`] = postData;
-        // return update(ref(database), updates)
 
-        set(ref(database, `/users/${uid}/categories/${id}/`), postData)
+        await set(ref(database, `/users/${uid}/categories/${id}/`), postData)
           .then(() => {
             // console.log("data was updated");
           })
