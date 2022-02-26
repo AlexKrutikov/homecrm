@@ -27,6 +27,40 @@ export default {
         commit('setError', error)
         throw error
       }
+    },
+    async fetchRecords({ dispatch, commit }) {
+      try {
+        const recs = []
+        const uid = await dispatch('getUid')
+        var recordsData = {}
+        const dbRef = ref(database);
+        await get(child(dbRef, `/users/${uid}/records`)).then((snapshot) => {
+
+          if (snapshot.exists()) {
+            const recordsData = snapshot.val() || {}
+
+            Object.keys(recordsData).forEach(key => {
+              recs.push({
+                id: key,
+                amount: recordsData[key].amount,
+                categoryId: recordsData[key].categoryId,
+                type: recordsData[key].type,
+                description: recordsData[key].description
+              })
+            })
+
+          }
+        }).catch((error) => {
+          commit('setError', error)
+          throw error
+        });
+
+        return recs
+
+      } catch (e) {
+        commit('setError', e)
+        throw e
+      }
     }
   }
 }
