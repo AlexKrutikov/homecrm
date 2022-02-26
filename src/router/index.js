@@ -5,15 +5,16 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBWe1ZN01AK5XL8349z-LuldEO9hQmAF8Y",
-  authDomain: "vue-homecrm.firebaseapp.com",
-  databaseURL: "https://vue-homecrm-default-rtdb.firebaseio.com",
-  projectId: "vue-homecrm",
-  storageBucket: "vue-homecrm.appspot.com",
-  messagingSenderId: "1063356846319",
-  appId: "1:1063356846319:web:b2abdf7c74dcf94b044b1a",
-  measurementId: "G-J6MMLWNP4G"
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
+  measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENT_ID
 };
+
 const firebase = initializeApp(firebaseConfig);
 
 Vue.use(VueRouter)
