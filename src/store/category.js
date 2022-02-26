@@ -49,6 +49,27 @@ export default {
         throw e
       }
     },
+    async fetchCategoryById({ commit, dispatch }, id) {
+      try {
+
+        const uid = await dispatch('getUid')
+        var category = {}
+        const dbRef = ref(database);
+        await get(child(dbRef, `/users/${uid}/categories/${id}`)).then((snapshot) => {
+
+          if (snapshot.exists()) {
+            category = snapshot.val() || {}
+          }
+        }).catch((error) => {
+          commit('setError', error)
+          throw error
+        });
+        return { ...category, id }
+      } catch (e) {
+        commit('setError', e)
+        throw e
+      }
+    },
     async updateCategory({ commit, dispatch }, { title, limit, id }) {
       try {
         const uid = await dispatch('getUid')

@@ -62,6 +62,29 @@ export default {
         commit('setError', e)
         throw e
       }
+    },
+    async fetchRecordById({ dispatch, commit }, id) {
+      try {
+
+        const uid = await dispatch('getUid')
+        var record = {}
+        const dbRef = ref(database);
+        await get(child(dbRef, `/users/${uid}/records/${id}`)).then((snapshot) => {
+
+          if (snapshot.exists()) {
+            record = snapshot.val() || {}
+          }
+        }).catch((error) => {
+          commit('setError', error)
+          throw error
+        });
+
+        return { ...record, id }
+
+      } catch (e) {
+        commit('setError', e)
+        throw e
+      }
     }
   }
 }
