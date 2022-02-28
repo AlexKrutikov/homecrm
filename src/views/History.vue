@@ -5,14 +5,6 @@
 		</div>
 
 		<Loader v-if="loading" />
-		<p class="center" v-else-if="!chartData">
-			Нет данных для построения графика
-		</p>
-		<div v-else class="history-chart">
-			<pie-chart :chartdata="chartData" :options="chartOptions" />
-		</div>
-
-		<Loader v-if="loading" />
 
 		<p class="center" v-else-if="!records.length">
 			Записей пока нет
@@ -20,6 +12,9 @@
 		</p>
 
 		<section v-else>
+			<div class="history-chart">
+				<pie-chart :chartdata="chartData" :options="chartOptions" />
+			</div>
 			<HistoryTable :records="items" />
 			<Paginate
 				v-model="page"
