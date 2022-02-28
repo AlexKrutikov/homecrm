@@ -142,9 +142,9 @@ export default {
 
 					await this.$store.dispatch("updateInfo", { bill })
 					this.$message("Запись успешно создана")
-					this.$v.$resert()
 					this.amount = 1
 					this.description = ""
+					this.$v.$resert()
 				} catch (error) {}
 			} else {
 				this.$message(
