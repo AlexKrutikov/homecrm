@@ -14,6 +14,7 @@ import titlePlugin from '@/utils/title.plugin'
 import Loader from '@/components/app/Loader'
 import './registerServiceWorker'
 import 'materialize-css/dist/js/materialize.min'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
